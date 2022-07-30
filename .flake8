@@ -1,6 +1,6 @@
 [flake8]
 max-line-length = 88
-ignore = VNE001,W503
+ignore = VNE001,W503, E501
 
 ;mccabe
 max-complexity = 10

@@ -40,7 +40,7 @@ repos:
 
       - id: mypy
         name: Typecheck with mypy
-        entry: poetry run mypy glados
+        entry: poetry run mypy .
         pass_filenames: false
         types: [python]
         language: system
@@ -63,7 +63,7 @@ repos:
 
       - id: bandit
         name: Check security issues with bandit
-        entry: poetry run bandit -r glados
+        entry: poetry run bandit -r .
         pass_filenames: false
         types: [python]
         language: system

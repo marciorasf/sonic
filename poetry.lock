@@ -615,6 +615,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "result"
+version = "0.8.0"
+description = "A Rust-like result type for Python"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "ruamel.yaml"
 version = "0.17.21"
 description = "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order"
@@ -739,7 +747,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "58e1afdb59c70a4af1d022f0cb2c65036668094d8d812e21afc4f222e6d9479f"
+content-hash = "b721dc7c6d98cfdfc14d15328db5fa6099db4d2d7bd03a21ff2fbdc25e9b6e5e"
 
 [metadata.files]
 astor = [
@@ -1020,6 +1028,10 @@ pyyaml = [
 requests = [
     {file = "requests-2.28.1-py3-none-any.whl", hash = "sha256:8fefa2a1a1365bf5520aac41836fbee479da67864514bdb821f31ce07ce65349"},
     {file = "requests-2.28.1.tar.gz", hash = "sha256:7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"},
+]
+result = [
+    {file = "result-0.8.0-py3-none-any.whl", hash = "sha256:d6a6258f32c057a4e0478999c6ce43dcadaf8ea435f58ac601ae2768f93ef243"},
+    {file = "result-0.8.0.tar.gz", hash = "sha256:c48c909e92181a075ba358228a3fe161e26d205dad416ad81f27f23515a5626d"},
 ]
 "ruamel.yaml" = []
 "ruamel.yaml.clib" = []
