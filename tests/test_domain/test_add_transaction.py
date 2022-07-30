@@ -4,7 +4,8 @@ from decimal import Decimal
 import pytest
 from result import Err, Ok
 
-from sonic.domain.add_transaction import Error, Request, execute
+from sonic.domain.add_transaction import ErrorType, Request, execute
+from sonic.error import ErrorWithReason
 from sonic.repositories.transaction import InMemoryRepository
 
 
@@ -34,6 +35,25 @@ async def test_add_transaction_happy_path() -> None:
 
 
 @pytest.mark.asyncio()
+async def test_add_transaction_invalid_request() -> None:
+    repo = InMemoryRepository()
+    req = Request(
+        client_id="test_client",
+        timestamp="2021-03-03T03:03:03.300000",
+        value="200.00",
+        description="",
+    )
+
+    res = await execute(repo, req)
+
+    match res:
+        case Err(ErrorWithReason(ErrorType.BadRequest)):
+            pass
+        case _:
+            pytest.fail("Unreachable")
+
+
+@pytest.mark.asyncio()
 async def test_add_transaction_unknown_error_on_repo() -> None:
     repo = InMemoryRepository().with_error()
     req = Request(
@@ -46,7 +66,7 @@ async def test_add_transaction_unknown_error_on_repo() -> None:
     res = await execute(repo, req)
 
     match res:
-        case Err(Error.Unknown):
+        case Err(ErrorWithReason(ErrorType.Unknown)):
             pass
         case _:
             pytest.fail("Unreachable")

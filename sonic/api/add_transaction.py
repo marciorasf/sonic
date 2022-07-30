@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, status
 from result import Err, Ok, Result
 
 from sonic.domain import add_transaction
+from sonic.error import ErrorWithReason
 from sonic.repositories.transaction import InMemoryRepository
 
 router = APIRouter()
@@ -25,8 +26,8 @@ async def serve(req: Request) -> Any:
             match await add_transaction.execute(repo, t):
                 case Ok():
                     return None
-                case Err(add_transaction.Error.BadRequest):
-                    raise HTTPException(status.HTTP_400_BAD_REQUEST)
+                case Err(ErrorWithReason(add_transaction.ErrorType.BadRequest, reason)):
+                    raise HTTPException(status.HTTP_400_BAD_REQUEST, reason)
                 case Err():
                     raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
         case Err(MissingFieldsError(reason)):

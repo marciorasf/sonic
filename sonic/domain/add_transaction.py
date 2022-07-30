@@ -4,6 +4,7 @@ from enum import Enum, auto
 from result import Err, Ok, Result
 
 from sonic.domain.model import new_transaction
+from sonic.error import ErrorWithReason
 from sonic.repositories.transaction import Repository
 
 
@@ -20,18 +21,23 @@ class Response:
     pass
 
 
-class Error(Enum):
+class ErrorType(Enum):
     BadRequest = auto()
     Unknown = auto()
 
 
-async def execute(repo: Repository, req: Request) -> Result[Response, Error]:  # type: ignore[return]
+async def execute(repo: Repository, req: Request) -> Result[Response, ErrorWithReason]:  # type: ignore[return]
     match new_transaction(req.client_id, req.timestamp, req.value, req.description):
         case Ok(transaction):
             match await repo.insert(transaction):
                 case Ok():
                     return Ok(Response())
                 case Err():
-                    return Err(Error.Unknown)
-        case Err():
-            return Err(Error.BadRequest)
+                    return Err(
+                        ErrorWithReason(
+                            type=ErrorType.Unknown,
+                            reason="error while inserting on repo",
+                        )
+                    )
+        case Err(err):
+            return Err(ErrorWithReason(type=ErrorType.BadRequest, reason=err))
