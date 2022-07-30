@@ -76,7 +76,7 @@ def to_transaction_description(
     return Ok(TransactionDescription(d))
 
 
-@dataclass
+@dataclass(frozen=True)
 class Transaction:
     client_id: ClientId
     timestamp: TransactionTs

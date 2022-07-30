@@ -8,7 +8,7 @@ from sonic.logging import logger
 from sonic.repositories.transaction import Repository
 
 
-@dataclass
+@dataclass(frozen=True)
 class Request:
     client_id: str
     timestamp: str

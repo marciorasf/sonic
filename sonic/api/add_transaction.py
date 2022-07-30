@@ -11,7 +11,7 @@ from sonic.repositories.transaction import InMemoryRepository
 router = APIRouter()
 
 
-@dataclass
+@dataclass(frozen=True)
 class Request:
     transaction: str
 
@@ -35,7 +35,7 @@ async def serve(req: Request) -> Any:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, reason)
 
 
-@dataclass
+@dataclass(frozen=True)
 class MissingFieldsError:
     fields: Set[str]
 
