@@ -11,7 +11,7 @@ from sonic.repositories.transaction import InMemoryRepository
 router = APIRouter()
 
 
-@dataclass(frozen=True)
+@dataclass
 class Request:
     transaction: str
 
