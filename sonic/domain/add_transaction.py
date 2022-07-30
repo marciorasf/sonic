@@ -4,7 +4,6 @@ from enum import Enum, auto
 from result import Err, Ok, Result
 
 from sonic.domain.model import new_transaction
-from sonic.logging import logger
 from sonic.repositories.transaction import Repository
 
 
@@ -34,6 +33,5 @@ async def execute(repo: Repository, req: Request) -> Result[Response, Error]:  #
                     return Ok(Response())
                 case Err():
                     return Err(Error.Unknown)
-        case Err(err):
-            logger.debug(err)
+        case Err():
             return Err(Error.BadRequest)

@@ -5,7 +5,6 @@ from fastapi import APIRouter, HTTPException, status
 from result import Err, Ok, Result
 
 from sonic.domain import add_transaction
-from sonic.logging import logger
 from sonic.repositories.transaction import InMemoryRepository
 
 router = APIRouter()
@@ -27,7 +26,6 @@ async def serve(req: Request) -> Any:
                 case Ok():
                     return None
                 case Err(add_transaction.Error.BadRequest):
-                    logger.debug(t)
                     raise HTTPException(status.HTTP_400_BAD_REQUEST)
                 case Err():
                     raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
