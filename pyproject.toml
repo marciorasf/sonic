@@ -17,6 +17,8 @@ python = "^3.10"
 result = "^0.8.0"
 fastapi = "^0.79.0"
 uvicorn = { extras = ["standard"], version = "^0.18.2" }
+structlog = "^22.1.0"
+orjson = "^3.7.10"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.4"

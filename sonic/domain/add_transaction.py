@@ -1,13 +1,11 @@
-import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 
 from result import Err, Ok, Result
 
 from sonic.domain.model import new_transaction
+from sonic.logging import logger
 from sonic.repositories.transaction import Repository
-
-logger = logging.getLogger()
 
 
 @dataclass

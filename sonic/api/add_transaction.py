@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass
 from typing import Any, Set
 
@@ -6,9 +5,8 @@ from fastapi import APIRouter, HTTPException, status
 from result import Err, Ok, Result
 
 from sonic.domain import add_transaction
+from sonic.logging import logger
 from sonic.repositories.transaction import InMemoryRepository
-
-logger = logging.getLogger()
 
 router = APIRouter()
 
