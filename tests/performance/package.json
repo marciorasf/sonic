@@ -1,0 +1,15 @@
+{
+  "name": "sonic-performance-tests",
+  "version": "1.0.0",
+  "description": "Sonic's performance tests",
+  "author": "Márcio Andrade <marciorasf@gmail.com>",
+  "keywords": [],
+  "scripts": {
+    "build": "rm -rf build && tsc -b"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/k6": "^0.37.1",
+    "typescript": "^4.7.4"
+  }
+}
