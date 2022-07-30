@@ -4,7 +4,6 @@ from typing import List, Protocol
 from result import Err, Ok, Result
 
 from sonic.domain.model import Transaction
-from sonic.logging import logger
 
 
 class InsertError(Enum):
@@ -31,5 +30,4 @@ class InMemoryRepository:
             return Err(InsertError.Unknown)
 
         self._transactions.append(transaction)
-        logger.debug("Inserted transaction", transaction=transaction)
         return Ok()
