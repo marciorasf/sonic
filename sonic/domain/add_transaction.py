@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 
@@ -5,6 +6,8 @@ from result import Err, Ok, Result
 
 from sonic.domain.model import new_transaction
 from sonic.repositories.transaction import Repository
+
+logger = logging.getLogger()
 
 
 @dataclass
@@ -33,5 +36,6 @@ async def execute(repo: Repository, req: Request) -> Result[Response, Error]:  #
                     return Ok(Response())
                 case Err():
                     return Err(Error.Unknown)
-        case Err():
+        case Err(err):
+            logger.debug(err)
             return Err(Error.BadRequest)

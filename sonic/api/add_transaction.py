@@ -1,10 +1,14 @@
+import logging
 from dataclasses import dataclass
-from typing import Dict, Set
+from typing import Any, Set
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from result import Err, Ok, Result
 
 from sonic.domain import add_transaction
+from sonic.repositories.transaction import InMemoryRepository
+
+logger = logging.getLogger()
 
 router = APIRouter()
 
@@ -14,9 +18,23 @@ class Request:
     transaction: str
 
 
+repo = InMemoryRepository()
+
+
 @router.post("/")
-def serve(req: Request) -> Dict[str, str]:
-    return {"Hello": "World"}
+async def serve(req: Request) -> Any:
+    match parse_transaction(req.transaction):
+        case Ok(t):
+            match await add_transaction.execute(repo, t):
+                case Ok():
+                    return None
+                case Err(add_transaction.Error.BadRequest):
+                    logger.debug(t)
+                    raise HTTPException(status.HTTP_400_BAD_REQUEST)
+                case Err():
+                    raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
+        case Err(MissingFieldsError(reason)):
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, reason)
 
 
 @dataclass
