@@ -1,11 +1,14 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 
+from opentelemetry import trace
 from result import Err, Ok, Result
 
 from sonic.domain.model import new_transaction
 from sonic.error import ErrorWithReason
 from sonic.repositories.transaction import Repository
+
+tracer = trace.get_tracer(__name__)
 
 
 @dataclass(frozen=True)

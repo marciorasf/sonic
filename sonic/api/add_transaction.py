@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Set
 
 from fastapi import APIRouter, HTTPException, status
+from pydantic import BaseModel
 from result import Err, Ok, Result
 
 from sonic.domain import add_transaction
@@ -11,9 +12,15 @@ from sonic.repositories.transaction import InMemoryRepository
 router = APIRouter()
 
 
-@dataclass
-class Request:
+class Request(BaseModel):
     transaction: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "transaction": "client_id=abc-client-1;transaction_timestamp=2022-07-15T03:40:23.123;value=23.10;description=Chocolate store",
+            }
+        }
 
 
 repo = InMemoryRepository()

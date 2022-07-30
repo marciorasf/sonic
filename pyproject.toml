@@ -20,6 +20,12 @@ uvicorn = { extras = ["standard"], version = "^0.18.2" }
 structlog = "^22.1.0"
 orjson = "^3.7.10"
 starlette-exporter = "^0.13.0"
+opentelemetry-instrumentation-fastapi = "^0.30b1"
+opentelemetry-api = "^1.11.1"
+opentelemetry-sdk = "^1.11.1"
+pydantic = "^1.9.1"
+opentelemetry-exporter-jaeger = "^1.11.1"
+otel-extensions = "^0.2.1"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.4"

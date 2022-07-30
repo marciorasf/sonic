@@ -1,3 +1,3 @@
 #!/bin/bash
 
-poetry run uvicorn sonic.main:app --reload
+poetry run opentelemetry-instrument uvicorn sonic.main:app
