@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 
-from result import Ok, Result
+from result import Err, Ok, Result
+
+from sonic.domain.model import new_transaction
+from sonic.repositories.transaction import Repository
 
 
 @dataclass
@@ -22,5 +25,13 @@ class Error(Enum):
     Unknown = auto()
 
 
-def execute(req: Request) -> Result[Response, Error]:
-    return Ok(Response())
+async def execute(repo: Repository, req: Request) -> Result[Response, Error]:  # type: ignore[return]
+    match new_transaction(req.client_id, req.timestamp, req.value, req.description):
+        case Ok(transaction):
+            match await repo.insert(transaction):
+                case Ok():
+                    return Ok(Response())
+                case Err():
+                    return Err(Error.Unknown)
+        case Err():
+            return Err(Error.BadRequest)
