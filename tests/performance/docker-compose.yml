@@ -5,6 +5,8 @@ services:
     build:
       context: ../../
       dockerfile: Dockerfile
+    environment:
+      SONIC_JAEGER__HOST: jaeger
     cap_add:
       - SYS_PTRACE
     user: root

@@ -3,26 +3,22 @@ import logging
 import orjson
 import structlog
 from fastapi import FastAPI
-from opentelemetry import trace
-from opentelemetry.exporter.jaeger.thrift import JaegerExporter
-from opentelemetry.sdk.resources import SERVICE_NAME, Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry import trace  # type: ignore[attr-defined]
+from opentelemetry.exporter.jaeger.thrift import (  # type: ignore[attr-defined]
+    JaegerExporter,
+)
+from opentelemetry.sdk.resources import (  # type: ignore[attr-defined]
+    SERVICE_NAME,
+    Resource,
+)
+from opentelemetry.sdk.trace import TracerProvider  # type: ignore[attr-defined]
+from opentelemetry.sdk.trace.export import (  # type: ignore[attr-defined]
+    BatchSpanProcessor,
+)
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from sonic.api.router import api_router
-
-resource = Resource(attributes={SERVICE_NAME: "sonic"})
-
-jaeger_exporter = JaegerExporter(
-    agent_host_name="localhost",
-    agent_port=6831,
-)
-
-provider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(jaeger_exporter)
-provider.add_span_processor(processor)
-trace.set_tracer_provider(provider)
+from sonic.settings import Settings
 
 structlog.configure(
     cache_logger_on_first_use=True,
@@ -37,6 +33,19 @@ structlog.configure(
     logger_factory=structlog.BytesLoggerFactory(),
 )
 
+settings = Settings()
+
+resource = Resource(attributes={SERVICE_NAME: settings.jaeger.service})
+
+jaeger_exporter = JaegerExporter(
+    agent_host_name=settings.jaeger.host,
+    agent_port=settings.jaeger.port,
+)
+
+provider = TracerProvider(resource=resource)
+processor = BatchSpanProcessor(jaeger_exporter)
+provider.add_span_processor(processor)
+trace.set_tracer_provider(provider)
 
 app = FastAPI()
 
