@@ -2,8 +2,8 @@
 
 ## Requirements
 
-- Install Node.js (and yarn).
-- Install Docker and DockerCompose.
+- Install Node.js and yarn
+- Install Docker and DockerCompose
 
 ## Run tests
 
@@ -13,7 +13,7 @@
    cd tests/performance
    ```
 
-2. Install node dependencies:
+2. Install dependencies:
 
    ```bash
    yarn install
