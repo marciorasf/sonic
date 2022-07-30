@@ -13,19 +13,21 @@ testpaths = ["tests"]
 addopts = "--asyncio-mode=strict --cov=sonic --junitxml=reports/junit.xml --cov-report=xml:reports/coverage.xml --cov-report=term --cov-config=pyproject.toml"
 
 [tool.poetry.dependencies]
+fastapi = "^0.79.0"
+opentelemetry-api = "^1.11.1"
+opentelemetry-exporter-jaeger = "^1.11.1"
+opentelemetry-instrumentation-fastapi = "^0.30b1"
+opentelemetry-sdk = "^1.11.1"
+orjson = "^3.7.10"
+otel-extensions = "^0.2.1"
+prometheus-async = "^22.2.0"
+prometheus-client = "^0.14.1"
+pydantic = "^1.9.1"
 python = "^3.10"
 result = "^0.8.0"
-fastapi = "^0.79.0"
-uvicorn = { extras = ["standard"], version = "^0.18.2" }
-structlog = "^22.1.0"
-orjson = "^3.7.10"
 starlette-exporter = "^0.13.0"
-opentelemetry-instrumentation-fastapi = "^0.30b1"
-opentelemetry-api = "^1.11.1"
-opentelemetry-sdk = "^1.11.1"
-pydantic = "^1.9.1"
-opentelemetry-exporter-jaeger = "^1.11.1"
-otel-extensions = "^0.2.1"
+structlog = "^22.1.0"
+uvicorn = { extras = ["standard"], version = "^0.18.2" }
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.4"
@@ -47,8 +49,8 @@ pytest = "^7.1.2"
 pytest-asyncio = "^0.19.0"
 pytest-cov = "^3.0.0"
 pytest-random-order = "^1.0.4"
-safety = "^2.1.1"
 pytest-watch = "^4.2.0"
+safety = "^2.1.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
