@@ -3,6 +3,7 @@ import logging
 import orjson
 import structlog
 from fastapi import FastAPI
+from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from sonic.api.router import api_router
 
@@ -21,4 +22,8 @@ structlog.configure(
 
 
 app = FastAPI()
+
+app.add_middleware(PrometheusMiddleware)
+app.add_route("/metrics", handle_metrics)
+
 app.include_router(api_router)
