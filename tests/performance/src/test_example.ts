@@ -8,7 +8,7 @@ import { Options } from "k6/options";
 
 // These options are used by K6 to configure the test.
 export const options: Options = {
-	duration: "60s",
+	duration: "3600s",
 	vus: 1,
 };
 
@@ -19,5 +19,5 @@ export default function () {
 			transaction: "client_id=abc-client-1;transaction_timestamp=2022-07-15T03:40:23.123;value=23.10;description=Chocolate store"
 		})
 	)
-	sleep(0.5)
+	sleep(1)
 }
