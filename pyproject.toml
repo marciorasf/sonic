@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "sonic"
+version = "0.1.0"
+description = ""
+authors = ["marciorasf <marciorasf@gmail.com>"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+	"--asyncio-mode=strict",
+	"--cov=sonic",
+	"--junitxml=reports/junit.xml",
+	"--cov-report=xml:reports/coverage.xml",
+	"--cov-report=term",
+	"--cov-config=pyproject.toml",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.dev-dependencies]
+bandit = "^1.7.4"
+black = "^22.6.0"
+flake8 = "^4.0.1"
+flake8-absolute-import = "^1.0.0"
+flake8-annotations-complexity = "^0.0.7"
+flake8-bugbear = "^22.7.1"
+flake8-comprehensions = "^3.10.0"
+flake8-eradicate = "^1.2.1"
+flake8-expression-complexity = "^0.0.11"
+flake8-functions = "^0.0.7"
+flake8-pytest-style = "^1.6.0"
+flake8-simplify = "^0.19.3"
+isort = "^5.10.1"
+mypy = "^0.971"
+pre-commit = "^2.20.0"
+pytest = "^7.1.2"
+pytest-asyncio = "^0.19.0"
+pytest-cov = "^3.0.0"
+pytest-random-order = "^1.0.4"
+safety = "^2.1.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
