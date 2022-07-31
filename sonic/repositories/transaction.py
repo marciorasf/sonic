@@ -1,9 +1,10 @@
 from enum import Enum, auto
-from typing import List, Protocol
+from typing import TYPE_CHECKING, List, Protocol
 
 from result import Err, Ok, Result
 
-from sonic.domain.model import Transaction
+if TYPE_CHECKING:
+    from sonic.domain.model import Transaction
 
 
 class InsertError(Enum):
@@ -11,21 +12,21 @@ class InsertError(Enum):
 
 
 class Repository(Protocol):
-    async def insert(self, transaction: Transaction) -> Result[None, InsertError]:
+    async def insert(self, transaction: "Transaction") -> Result[None, InsertError]:
         pass
 
 
 class InMemoryRepository:
     def __init__(self) -> None:
         self._error = False
-        self._transactions: List[Transaction] = []
+        self._transactions: List["Transaction"] = []
 
     def with_error(self) -> "InMemoryRepository":
         """Should be used only on tests!"""
         self._error = True
         return self
 
-    async def insert(self, transaction: Transaction) -> Result[None, InsertError]:
+    async def insert(self, transaction: "Transaction") -> Result[None, InsertError]:
         if self._error:
             return Err(InsertError.Unknown)
 

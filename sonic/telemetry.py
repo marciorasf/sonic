@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from opentelemetry import trace  # type: ignore[attr-defined]
 from opentelemetry.exporter.jaeger.thrift import (  # type: ignore[attr-defined]
     JaegerExporter,
@@ -11,10 +13,11 @@ from opentelemetry.sdk.trace.export import (  # type: ignore[attr-defined]
     BatchSpanProcessor,
 )
 
-from sonic.settings import TelemetryConfig
+if TYPE_CHECKING:
+    from sonic.settings import TelemetryConfig
 
 
-def setup_telemetry(config: TelemetryConfig) -> None:
+def setup_telemetry(config: "TelemetryConfig") -> None:
     resource = Resource(attributes={SERVICE_NAME: config.service})
 
     jaeger_exporter = JaegerExporter(

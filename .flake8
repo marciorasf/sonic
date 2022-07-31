@@ -4,3 +4,6 @@ ignore = VNE001,W503, E501
 
 ;mccabe
 max-complexity = 10
+
+; type-checking
+type-checking-pydantic-enabled = true
