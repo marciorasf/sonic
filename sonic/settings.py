@@ -1,14 +1,14 @@
 from pydantic import BaseModel, BaseSettings
 
 
-class Jaeger(BaseModel):
+class TelemetryConfig(BaseModel):
     service: str = "sonic"
     host: str = "localhost"
     port: int = 6831
 
 
 class Settings(BaseSettings):
-    jaeger: Jaeger = Jaeger()
+    telemetry: TelemetryConfig = TelemetryConfig()
 
     class Config:
         env_prefix = "sonic_"
