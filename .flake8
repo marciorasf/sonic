@@ -7,3 +7,5 @@ max-complexity = 10
 
 ; type-checking
 type-checking-pydantic-enabled = true
+type-checking-fastapi-enabled = true
+type-checking-fastapi-dependency-support-enabled = true

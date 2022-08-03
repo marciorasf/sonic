@@ -1,13 +1,14 @@
 from dataclasses import dataclass
-from typing import Any, Set
+from typing import Set
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from result import Err, Ok, Result
 
+from sonic.api.shared import get_repo
 from sonic.domain import add_transaction
 from sonic.error import ErrorWithReason
-from sonic.repositories.transaction import InMemoryRepository
+from sonic.repositories.transaction import Repository
 
 router = APIRouter()
 
@@ -23,11 +24,11 @@ class Request(BaseModel):
         }
 
 
-repo = InMemoryRepository()
+repo_dependency = Depends(get_repo)
 
 
 @router.post("/")
-async def serve(req: Request) -> Any:
+async def serve(req: Request, repo: Repository = repo_dependency) -> None:
     match parse_transaction(req.transaction):
         case Ok(t):
             match await add_transaction.execute(repo, t):
