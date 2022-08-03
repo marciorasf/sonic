@@ -8,8 +8,8 @@ import { Options } from "k6/options";
 
 // These options are used by K6 to configure the test.
 export const options: Options = {
-	duration: "3600s",
-	vus: 1,
+	duration: "60s",
+	vus: 100,
 };
 
 export default function () {
