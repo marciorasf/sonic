@@ -7,8 +7,7 @@ from result import Err, Ok, Result
 
 from sonic.adapters.repository import Repository
 from sonic.api.shared import get_repo
-from sonic.domain import add_transaction
-from sonic.error import ErrorWithReason
+from sonic.service_layer import services
 
 router = APIRouter()
 
@@ -31,11 +30,11 @@ repo_dependency = Depends(get_repo)
 async def serve(req: Request, repo: Repository = repo_dependency) -> None:
     match parse_transaction(req.transaction):
         case Ok(t):
-            match await add_transaction.execute(repo, t):
+            match await services.add_transaction(repo, t):
                 case Ok():
                     return None
-                case Err(ErrorWithReason(add_transaction.ErrorType.BadRequest, reason)):
-                    raise HTTPException(status.HTTP_400_BAD_REQUEST, reason)
+                case Err(ValueError() as err):
+                    raise HTTPException(status.HTTP_400_BAD_REQUEST, err)
                 case Err():
                     raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
         case Err(MissingFieldsError(reason)):
@@ -47,7 +46,9 @@ class MissingFieldsError:
     fields: Set[str]
 
 
-def parse_transaction(t: str) -> Result[add_transaction.Request, MissingFieldsError]:
+def parse_transaction(
+    t: str,
+) -> Result[services.AddTransactionRequest, MissingFieldsError]:
     pairs = t.split(";")
     hashmap = {}
 
@@ -66,7 +67,7 @@ def parse_transaction(t: str) -> Result[add_transaction.Request, MissingFieldsEr
         return Err(MissingFieldsError(missing_fields))
 
     return Ok(
-        add_transaction.Request(
+        services.AddTransactionRequest(
             client_id=hashmap["client_id"],
             timestamp=hashmap["transaction_timestamp"],
             value=hashmap["value"],

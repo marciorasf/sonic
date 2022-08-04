@@ -6,13 +6,13 @@ from result import Err, Ok
 
 from sonic.adapters.repository import FakeRepository
 from sonic.service_layer.error import UnknownError
-from sonic.service_layer.services import Request, add_transaction
+from sonic.service_layer.services import AddTransactionRequest, add_transaction
 
 
 @pytest.mark.asyncio()
 async def test_add_transaction_happy_path() -> None:
     repo = FakeRepository()
-    req = Request(
+    req = AddTransactionRequest(
         client_id="test_client",
         timestamp="2021-03-03T03:03:03.300000",
         value="200.00",
@@ -37,7 +37,7 @@ async def test_add_transaction_happy_path() -> None:
 @pytest.mark.asyncio()
 async def test_add_transaction_invalid_request() -> None:
     repo = FakeRepository()
-    req = Request(
+    req = AddTransactionRequest(
         client_id="test_client",
         timestamp="2021-03-03T03:03:03.300000",
         value="200.00",
@@ -56,7 +56,7 @@ async def test_add_transaction_invalid_request() -> None:
 @pytest.mark.asyncio()
 async def test_add_transaction_unknown_error_on_repo() -> None:
     repo = FakeRepository().with_error()
-    req = Request(
+    req = AddTransactionRequest(
         client_id="test_client",
         timestamp="2021-03-03T03:03:03.300000",
         value="200.00",

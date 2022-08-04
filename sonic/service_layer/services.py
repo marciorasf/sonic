@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class Request:
+class AddTransactionRequest:
     client_id: str
     timestamp: str
     value: str
@@ -19,16 +19,16 @@ class Request:
 
 
 @dataclass
-class Response:
+class AddTransactionResponse:
     pass
 
 
-async def add_transaction(repo: "Repository", req: Request) -> Result[Response, UnknownError | ValueError]:  # type: ignore[return]
+async def add_transaction(repo: "Repository", req: AddTransactionRequest) -> Result[AddTransactionResponse, UnknownError | ValueError]:  # type: ignore[return]
     match new_transaction(req.client_id, req.timestamp, req.value, req.description):
         case Ok(transaction):
             match await repo.insert(transaction):
                 case Ok():
-                    return Ok(Response())
+                    return Ok(AddTransactionResponse())
                 case Err():
                     return Err(UnknownError("error while inserting on repo"))
         case Err(err):
