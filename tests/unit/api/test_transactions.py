@@ -1,7 +1,7 @@
 import pytest
 from result import Err, Ok
 
-from sonic.api.add_transaction import parse_transaction
+from sonic.api.transactions import parse_transaction
 
 
 def test_parse_transaction_happy_path() -> None:

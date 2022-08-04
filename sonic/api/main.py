@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from sonic.adapters.repository import FakeRepository
-from sonic.api.router import router
+from sonic.api import transactions
 from sonic.monitoring import logger, setup_logging, setup_telemetry
 from sonic.settings import Settings
 
@@ -50,4 +50,4 @@ async def redirect_to_docs() -> RedirectResponse:
     return RedirectResponse(url="/docs")
 
 
-app.include_router(router)
+app.include_router(transactions.router, prefix="/transactions", tags=["transactions"])

@@ -1,15 +1,11 @@
-from dataclasses import dataclass
-from typing import Set
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from result import Err, Ok, Result
 
 from sonic.adapters.repository import Repository
-from sonic.api.shared import get_repo
+from sonic.api.dependencies import get_repo
+from sonic.api.errors import MissingFieldsError
 from sonic.service_layer import services
-
-router = APIRouter()
 
 
 class Request(BaseModel):
@@ -25,9 +21,11 @@ class Request(BaseModel):
 
 repo_dependency = Depends(get_repo)
 
+router = APIRouter()
+
 
 @router.post("/")
-async def serve(req: Request, repo: Repository = repo_dependency) -> None:
+async def add_transaction(req: Request, repo: Repository = repo_dependency) -> None:
     match parse_transaction(req.transaction):
         case Ok(t):
             match await services.add_transaction(repo, t):
@@ -39,11 +37,6 @@ async def serve(req: Request, repo: Repository = repo_dependency) -> None:
                     raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
         case Err(MissingFieldsError(reason)):
             raise HTTPException(status.HTTP_400_BAD_REQUEST, reason)
-
-
-@dataclass(frozen=True)
-class MissingFieldsError:
-    fields: Set[str]
 
 
 def parse_transaction(

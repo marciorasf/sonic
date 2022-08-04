@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from result import Err, Ok, Result
 
 from sonic.domain.model import new_transaction
-from sonic.service_layer.error import UnknownError
+from sonic.service_layer.errors import UnknownError
 
 if TYPE_CHECKING:
     from sonic.adapters.repository import Repository
