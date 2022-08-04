@@ -7,8 +7,12 @@ from sonic.api.dependencies import get_repo
 from sonic.api.errors import MissingFieldsError
 from sonic.service_layer import services
 
+router = APIRouter()
 
-class Request(BaseModel):
+repo_dependency = Depends(get_repo)
+
+
+class AddTransactionReq(BaseModel):
     transaction: str
 
     class Config:
@@ -19,13 +23,10 @@ class Request(BaseModel):
         }
 
 
-repo_dependency = Depends(get_repo)
-
-router = APIRouter()
-
-
 @router.post("/")
-async def add_transaction(req: Request, repo: Repository = repo_dependency) -> None:
+async def add_transaction(
+    req: AddTransactionReq, repo: Repository = repo_dependency
+) -> None:
     match parse_transaction(req.transaction):
         case Ok(t):
             match await services.add_transaction(repo, t):
