@@ -6,9 +6,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, RedirectResponse
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
+from sonic.adapters.repository import FakeRepository
 from sonic.api.router import router
 from sonic.logging import logger, setup_logging
-from sonic.repositories.transaction import InMemoryRepository
 from sonic.settings import Settings
 from sonic.telemetry import setup_telemetry
 
@@ -21,7 +21,7 @@ app = FastAPI()
 app.add_middleware(PrometheusMiddleware)
 app.add_route("/metrics", handle_metrics)
 
-repo = InMemoryRepository()
+repo = FakeRepository()
 
 
 @app.exception_handler(RequestValidationError)

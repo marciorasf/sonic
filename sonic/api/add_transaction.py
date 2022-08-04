@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from result import Err, Ok, Result
 
+from sonic.adapters.repository import Repository
 from sonic.api.shared import get_repo
 from sonic.domain import add_transaction
 from sonic.error import ErrorWithReason
-from sonic.repositories.transaction import Repository
 
 router = APIRouter()
 

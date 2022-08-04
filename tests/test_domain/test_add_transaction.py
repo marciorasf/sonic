@@ -4,14 +4,14 @@ from decimal import Decimal
 import pytest
 from result import Err, Ok
 
+from sonic.adapters.repository import FakeRepository
 from sonic.domain.add_transaction import ErrorType, Request, execute
 from sonic.error import ErrorWithReason
-from sonic.repositories.transaction import InMemoryRepository
 
 
 @pytest.mark.asyncio()
 async def test_add_transaction_happy_path() -> None:
-    repo = InMemoryRepository()
+    repo = FakeRepository()
     req = Request(
         client_id="test_client",
         timestamp="2021-03-03T03:03:03.300000",
@@ -36,7 +36,7 @@ async def test_add_transaction_happy_path() -> None:
 
 @pytest.mark.asyncio()
 async def test_add_transaction_invalid_request() -> None:
-    repo = InMemoryRepository()
+    repo = FakeRepository()
     req = Request(
         client_id="test_client",
         timestamp="2021-03-03T03:03:03.300000",
@@ -55,7 +55,7 @@ async def test_add_transaction_invalid_request() -> None:
 
 @pytest.mark.asyncio()
 async def test_add_transaction_unknown_error_on_repo() -> None:
-    repo = InMemoryRepository().with_error()
+    repo = FakeRepository().with_error()
     req = Request(
         client_id="test_client",
         timestamp="2021-03-03T03:03:03.300000",

@@ -8,7 +8,7 @@ from sonic.domain.model import new_transaction
 from sonic.error import ErrorWithReason
 
 if TYPE_CHECKING:
-    from sonic.repositories.transaction import Repository
+    from sonic.adapters.repository import Repository
 
 
 @dataclass(frozen=True)

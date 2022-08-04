@@ -16,12 +16,12 @@ class Repository(Protocol):
         pass
 
 
-class InMemoryRepository:
+class FakeRepository:
     def __init__(self) -> None:
         self._error = False
         self._transactions: List["Transaction"] = []
 
-    def with_error(self) -> "InMemoryRepository":
+    def with_error(self) -> "FakeRepository":
         """Should be used only on tests!"""
         self._error = True
         return self
