@@ -1,3 +1,3 @@
 #!/bin/bash
 
-poetry run opentelemetry-instrument uvicorn sonic.entrypoints.fastapi_app:app --reload
+poetry run opentelemetry-instrument uvicorn sonic.api.main:app --reload
