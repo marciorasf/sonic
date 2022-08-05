@@ -1,21 +1,18 @@
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from enum import Enum, auto
 from typing import List, NewType
 
 from result import Err, Ok, Result
 
+from sonic.helpers.errors import chain_exc
+
 ClientId = NewType("ClientId", str)
 
 
-class ClientIdError(Enum):
-    Empty = auto()
-
-
-def to_client_id(id: str) -> Result[ClientId, ClientIdError]:
+def to_client_id(id: str) -> Result[ClientId, ValueError]:
     if len(id) == 0:
-        return Err(ClientIdError.Empty)
+        return Err(ValueError("client id cannot be empty"))
 
     return Ok(ClientId(id))
 
@@ -23,55 +20,47 @@ def to_client_id(id: str) -> Result[ClientId, ClientIdError]:
 TransactionTs = NewType("TransactionTs", datetime)
 
 
-class TransactionTsError(Enum):
-    Invalid = auto()
-
-
-def to_transaction_ts(ts: str) -> Result[TransactionTs, TransactionTsError]:
+def to_transaction_ts(ts: str) -> Result[TransactionTs, ValueError]:
     try:
         return Ok(TransactionTs(datetime.fromisoformat(ts)))
-    except Exception:
-        return Err(TransactionTsError.Invalid)
+    except Exception as err:
+        return Err(chain_exc(ValueError(f"invalid transaction timestamp: {ts}"), err))
 
 
 TransactionValue = NewType("TransactionValue", Decimal)
 
 
-class TransactionValueError(Enum):
-    Invalid = auto()
-    OutOfBounds = auto()
-
-
 def to_transaction_value(
     v: str | int | float,
-) -> Result[TransactionValue, TransactionValueError]:
+) -> Result[TransactionValue, ValueError]:
     try:
         d = Decimal(v)
 
         if d > 1e9 or d < -1e9:
-            return Err(TransactionValueError.OutOfBounds)
+            return Err(ValueError(f"value must be in [-1e9, 1e9], and was {v}"))
 
         return Ok(TransactionValue(d))
-    except Exception:
-        return Err(TransactionValueError.Invalid)
+    except Exception as err:
+        return Err(
+            chain_exc(ValueError(f"value cannot be represented as decimal: {v}"), err)
+        )
 
 
 TransactionDescription = NewType("TransactionDescription", str)
 
 
-class TransactionDescriptionError(Enum):
-    Empty = auto()
-    OutOfBounds = auto()
-
-
 def to_transaction_description(
     d: str,
-) -> Result[TransactionDescription, TransactionDescriptionError]:
+) -> Result[TransactionDescription, ValueError]:
     if len(d) == 0:
-        return Err(TransactionDescriptionError.Empty)
+        return Err(ValueError("description cannot be empty"))
 
-    if len(d) > 255:
-        return Err(TransactionDescriptionError.OutOfBounds)
+    if len(d) > 256:
+        return Err(
+            ValueError(
+                f"description must have less than 256 characters, and {d} has {len(d)} characters"
+            )
+        )
 
     return Ok(TransactionDescription(d))
 
@@ -84,17 +73,7 @@ class Transaction:
     description: TransactionDescription
 
 
-NewTransactionError = List[
-    ClientIdError
-    | TransactionTsError
-    | TransactionValueError
-    | TransactionDescriptionError
-]
-
-
-def new_transaction(
-    client_id: str, timestamp: str, value: str, description: str
-) -> Result[Transaction, NewTransactionError]:
+def new_transaction(client_id: str, timestamp: str, value: str, description: str) -> Result[Transaction, List[ValueError]]:  # type: ignore[return]
     match (
         to_client_id(client_id),
         to_transaction_ts(timestamp),
@@ -111,7 +90,7 @@ def new_transaction(
                 )
             )
         case (id, ts, v, d):
-            errors: NewTransactionError = []
+            errors: List[ValueError] = []
             if id.is_err():
                 errors.append(id.unwrap_err())
 
@@ -125,7 +104,3 @@ def new_transaction(
                 errors.append(d.unwrap_err())
 
             return Err(errors)
-        case _:
-            raise RuntimeError(
-                f"Unknown error while creating transaction: {client_id=}, {timestamp=}, {value=}, {description=}"
-            )
