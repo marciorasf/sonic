@@ -6,10 +6,10 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, RedirectResponse
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
-from sonic.adapters.repository import FakeRepository
 from sonic.api import transactions
 from sonic.monitoring import logger, setup_logging, setup_telemetry
 from sonic.settings import Settings
+from tests.fakes import FakeRepository
 
 settings = Settings()
 setup_logging()

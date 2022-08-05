@@ -4,9 +4,9 @@ from decimal import Decimal
 import pytest
 from result import Err, Ok
 
-from sonic.adapters.repository import FakeRepository
 from sonic.errors import UnknownError
 from sonic.service_layer.services import AddTransactionRequest, add_transaction
+from tests.fakes import FakeRepository
 
 
 @pytest.mark.asyncio()

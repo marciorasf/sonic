@@ -26,7 +26,7 @@ class AddTransactionResponse:
 async def add_transaction(repo: "Repository", req: AddTransactionRequest) -> Result[AddTransactionResponse, UnknownError | ValueError]:  # type: ignore[return]
     match new_transaction(req.client_id, req.timestamp, req.value, req.description):
         case Ok(transaction):
-            match await repo.insert(transaction):
+            match await repo.add(transaction):
                 case Ok():
                     return Ok(AddTransactionResponse())
                 case Err():
