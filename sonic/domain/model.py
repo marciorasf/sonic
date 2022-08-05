@@ -5,7 +5,7 @@ from typing import List, NewType
 
 from result import Err, Ok, Result
 
-from sonic.helpers.errors import chain_exc
+from sonic.errors import chain_exc
 
 ClientId = NewType("ClientId", str)
 
