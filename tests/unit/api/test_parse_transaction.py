@@ -1,7 +1,7 @@
-import pytest
 from result import Err, Ok
 
 from sonic.api.transactions import parse_transaction
+from tests.helpers import unreachable
 
 
 def test_parse_transaction_happy_path() -> None:
@@ -16,10 +16,10 @@ def test_parse_transaction_happy_path() -> None:
             assert req.value == "23.10"
             assert req.description == "Chocolate store"
         case _:
-            pytest.fail("Unreachable")
+            unreachable()
 
 
-def test_parse_transaction_missing_field() -> None:
+def test_should_return_missing_fields() -> None:
     t = "clint_id=abc-client-1;transaction=2022-07-15T03:40:23.123;value=23.10;description=Chocolate store"
 
     res = parse_transaction(t)
@@ -28,4 +28,4 @@ def test_parse_transaction_missing_field() -> None:
         case Err(err):
             assert err.fields == {"client_id", "transaction_timestamp"}
         case _:
-            pytest.fail("Unreachable")
+            unreachable()
