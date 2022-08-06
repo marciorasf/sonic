@@ -32,8 +32,11 @@ class FakeRepository:
 
 
 class FakeUnitOfWork(UnitOfWork):
-    def __init__(self) -> None:
+    def __init__(self, with_error: bool = False) -> None:
         self.transactions = FakeRepository()
+        if with_error:
+            self.transactions = self.transactions.with_error()
+
         self.committed = False
 
     def commit(self) -> None:
