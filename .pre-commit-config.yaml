@@ -4,13 +4,17 @@ repos:
     hooks:
       - id: check-toml
         name: Check TOML files
+        stages: [push]
       - id: check-yaml
         name: Check YAML files
         args: [--allow-multiple-documents]
+        stages: [push]
       - id: end-of-file-fixer
         name: End files with single empty line
+        stages: [push]
       - id: trailing-whitespace
         name: Remove trailing whitespace
+        stages: [push]
       - id: detect-private-key
         name: Detect private keys
         stages: [push]
@@ -24,6 +28,7 @@ repos:
         types: [python]
         language: system
         require_serial: false
+        stages: [push]
 
       - id: black
         name: Format code with black
@@ -32,6 +37,7 @@ repos:
         types: [python]
         language: system
         require_serial: false
+        stages: [push]
 
       - id: flake8
         name: Check style with flake8
