@@ -8,6 +8,8 @@ from result import Err, Ok, Result
 
 from sonic.errors import chain_exc
 
+TransactionId = UUID
+
 ClientId = NewType("ClientId", str)
 
 
@@ -68,7 +70,7 @@ def to_transaction_description(
 
 @dataclass(frozen=True)
 class Transaction:
-    id: UUID
+    id: TransactionId
     client_id: ClientId
     timestamp: TransactionTs
     value: TransactionValue

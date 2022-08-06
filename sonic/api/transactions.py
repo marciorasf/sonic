@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from result import Err, Ok, Result
@@ -20,13 +22,20 @@ class AddTransactionReq(BaseModel):
         }
 
 
-@router.post("/")
-async def add_transaction(req: AddTransactionReq) -> None:
+class AddTransactionRes(BaseModel):
+    id: UUID
+
+    class Config:
+        schema_extra = {"example": {"id": "e5ac89eb-d573-45ed-bc88-0a8f36655a53"}}
+
+
+@router.post("/", response_model=AddTransactionRes)
+async def add_transaction(req: AddTransactionReq) -> AddTransactionRes:  # type: ignore[return]
     match parse_transaction(req.transaction):
         case Ok(t):
             match await services.add_transaction(t, FakeUnitOfWork()):
-                case Ok():
-                    return None
+                case Ok(res):
+                    return AddTransactionRes(id=res.id)
                 case Err(ValueError() as err):
                     raise HTTPException(status.HTTP_400_BAD_REQUEST, err)
                 case Err(err):
