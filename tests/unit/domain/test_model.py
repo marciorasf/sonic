@@ -187,3 +187,17 @@ def test_should_return_value_error_when_invalid_fields_are_provided() -> None:
             pass
         case _:
             unreachable()
+
+
+def test_equality_between_transactions_depends_only_on_id() -> None:
+    id = random_transaction_id()
+    ts = "2021-03-03T03:03:03.300000"
+    v = "20"
+    d = "description"
+
+    t1 = new_transaction(id, "client_1", ts, v, d)
+    t2 = new_transaction(id, "client_2", ts, v, d)
+    t3 = new_transaction(random_transaction_id(), "client_3", ts, v, d)
+
+    assert t1 == t2
+    assert t1 != t3

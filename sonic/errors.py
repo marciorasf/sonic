@@ -10,3 +10,7 @@ def chain_exc(new_exc: T, cause: Exception) -> T:
 
 class UnknownError(Exception):
     pass
+
+
+class NotFound(Exception):
+    pass

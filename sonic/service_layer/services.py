@@ -35,3 +35,34 @@ async def add_transaction(req: AddTransactionRequest, uow: UnitOfWork) -> Result
                         return Err(err)
         case Err(err):
             return Err(ValueError(f"invalid request: {err}"))
+
+
+@dataclass(frozen=True)
+class FetchTransactionRequest:
+    id: UUID
+
+
+@dataclass
+class FetchTransactionResponse:
+    id: UUID
+    client_id: str
+    timestamp: str
+    value: str
+    description: str
+
+
+async def fetch_transaction(req: FetchTransactionRequest, uow: UnitOfWork) -> Result[FetchTransactionResponse, UnknownError]:  # type: ignore[return]
+    with uow:
+        match (await uow.transactions.fetch(req.id)):
+            case Ok(t):
+                return Ok(
+                    FetchTransactionResponse(
+                        id=t.id,
+                        client_id=t.client_id,
+                        timestamp=t.timestamp,
+                        value=t.value,
+                        description=t.description,
+                    )
+                )
+            case Err(UnknownError() as err):
+                return Err(err)

@@ -68,13 +68,19 @@ def to_transaction_description(
     return Ok(TransactionDescription(d))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=False)
 class Transaction:
     id: TransactionId
     client_id: ClientId
     timestamp: TransactionTs
     value: TransactionValue
     description: TransactionDescription
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Transaction):
+            return False
+
+        return self.id == other.id
 
 
 def new_transaction(id: UUID, client_id: str, timestamp: str, value: str, description: str) -> Result[Transaction, List[ValueError]]:  # type: ignore[return]
