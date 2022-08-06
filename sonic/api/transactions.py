@@ -29,8 +29,8 @@ async def add_transaction(req: AddTransactionReq) -> None:
                     return None
                 case Err(ValueError() as err):
                     raise HTTPException(status.HTTP_400_BAD_REQUEST, err)
-                case Err():
-                    raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
+                case Err(err):
+                    raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, err)
         case Err(MissingFieldsError(reason)):
             raise HTTPException(status.HTTP_400_BAD_REQUEST, reason)
 
