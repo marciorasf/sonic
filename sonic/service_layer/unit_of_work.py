@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 from sonic.adapters.repository import Repository
 
@@ -9,7 +10,7 @@ class UnitOfWork(ABC):
     def __enter__(self) -> "UnitOfWork":
         return self
 
-    def __exit__(self) -> None:
+    def __exit__(self, *_: Any) -> None:
         self.rollback()
 
     @abstractmethod

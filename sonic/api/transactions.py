@@ -6,6 +6,7 @@ from sonic.adapters.repository import Repository
 from sonic.api.dependencies import get_repo
 from sonic.api.errors import MissingFieldsError
 from sonic.service_layer import services
+from tests.fakes import FakeUnitOfWork
 
 router = APIRouter()
 
@@ -29,7 +30,7 @@ async def add_transaction(
 ) -> None:
     match parse_transaction(req.transaction):
         case Ok(t):
-            match await services.add_transaction(repo, t):
+            match await services.add_transaction(t, FakeUnitOfWork()):
                 case Ok():
                     return None
                 case Err(ValueError() as err):
