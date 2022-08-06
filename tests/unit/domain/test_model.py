@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+from typing import Any, Callable
 
 from result import Err, Ok
 
@@ -154,6 +155,14 @@ def test_new_transaction_happy_path() -> None:
             )
         case _:
             unreachable()
+
+
+def test_bench_new_transaction(benchmark: Callable[..., Any]) -> None:
+    id = random_transaction_id()
+
+    benchmark(
+        new_transaction, id, "test_client", "2021-03-03T03:03:03.300000", "200", "desc"
+    )
 
 
 def test_should_return_value_error_when_invalid_fields_are_provided() -> None:
