@@ -14,7 +14,7 @@ from sonic.domain.model import (
 from tests.helpers import unreachable
 
 
-def test_to_client_id() -> None:
+def test_should_return_client_id() -> None:
     res = to_client_id("success")
     match res:
         case Ok(client_id):
@@ -22,6 +22,8 @@ def test_to_client_id() -> None:
         case _:
             unreachable()
 
+
+def test_should_return_value_error_when_client_id_is_empty() -> None:
     res = to_client_id("")
     match res:
         case Err(ValueError()):
@@ -30,7 +32,7 @@ def test_to_client_id() -> None:
             unreachable()
 
 
-def test_to_transaction_ts() -> None:
+def test_should_return_transaction_ts() -> None:
     res = to_transaction_ts("2021-03-03T03:03:03.300000")
     match res:
         case Ok(t):
@@ -45,6 +47,8 @@ def test_to_transaction_ts() -> None:
         case _:
             unreachable()
 
+
+def test_should_return_value_error_when_timestamp_is_invalid() -> None:
     res = to_transaction_ts("invalid")
     match res:
         case Err(ValueError()):
@@ -53,7 +57,7 @@ def test_to_transaction_ts() -> None:
             unreachable()
 
 
-def test_to_transaction_value() -> None:
+def test_should_return_value() -> None:
     res = to_transaction_value("20.00")
     match res:
         case Ok(v):
@@ -68,6 +72,8 @@ def test_to_transaction_value() -> None:
         case _:
             unreachable()
 
+
+def test_should_return_value_error_when_value_is_invalid() -> None:
     res = to_transaction_value("20,00")
     match res:
         case Err(ValueError()):
@@ -82,6 +88,8 @@ def test_to_transaction_value() -> None:
         case _:
             unreachable()
 
+
+def test_should_return_value_error_when_value_is_out_of_bounds() -> None:
     res = to_transaction_value(1e12)
     match res:
         case Err(ValueError()):
@@ -97,7 +105,7 @@ def test_to_transaction_value() -> None:
             unreachable()
 
 
-def test_to_transaction_description() -> None:
+def test_should_return_description() -> None:
     res = to_transaction_description("my_description")
     match res:
         case Ok(d):
@@ -105,6 +113,8 @@ def test_to_transaction_description() -> None:
         case _:
             unreachable()
 
+
+def test_should_return_value_error_when_description_is_empty() -> None:
     res = to_transaction_description("")
     match res:
         case Err(ValueError()):
@@ -112,6 +122,8 @@ def test_to_transaction_description() -> None:
         case _:
             unreachable()
 
+
+def test_should_return_value_error_when_description_is_too_long() -> None:
     res = to_transaction_description("x" * 1000)
     match res:
         case Err(ValueError()):
@@ -120,7 +132,7 @@ def test_to_transaction_description() -> None:
             unreachable()
 
 
-def test_new_transaction() -> None:
+def test_should_return_new_transaction() -> None:
     res = new_transaction(
         "test_client", "2021-03-03T03:03:03.300000", "20", "description"
     )
@@ -135,6 +147,8 @@ def test_new_transaction() -> None:
         case _:
             unreachable()
 
+
+def test_should_return_value_error_when_invalid_fields_are_provided() -> None:
     res = new_transaction(
         "test_client", "2021-03-03T03:03:03.300000", "", "description"
     )
