@@ -1,16 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from result import Err, Ok, Result
 
-from sonic.adapters.repository import Repository
-from sonic.api.dependencies import get_repo
 from sonic.api.errors import MissingFieldsError
 from sonic.service_layer import services
 from tests.fakes import FakeUnitOfWork
 
 router = APIRouter()
-
-repo_dependency = Depends(get_repo)
 
 
 class AddTransactionReq(BaseModel):
@@ -25,9 +21,7 @@ class AddTransactionReq(BaseModel):
 
 
 @router.post("/")
-async def add_transaction(
-    req: AddTransactionReq, repo: Repository = repo_dependency
-) -> None:
+async def add_transaction(req: AddTransactionReq) -> None:
     match parse_transaction(req.transaction):
         case Ok(t):
             match await services.add_transaction(t, FakeUnitOfWork()):

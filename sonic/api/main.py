@@ -1,7 +1,4 @@
-from contextlib import suppress
-from typing import Any, Callable
-
-from fastapi import FastAPI, Request, Response, status
+from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, RedirectResponse
 from starlette_exporter import PrometheusMiddleware, handle_metrics
@@ -9,7 +6,6 @@ from starlette_exporter import PrometheusMiddleware, handle_metrics
 from sonic.api import transactions
 from sonic.monitoring import logger, setup_logging, setup_telemetry
 from sonic.settings import Settings
-from tests.fakes import FakeRepository
 
 settings = Settings()
 setup_logging()
@@ -19,8 +15,6 @@ app = FastAPI()
 
 app.add_middleware(PrometheusMiddleware)
 app.add_route("/metrics", handle_metrics)
-
-repo = FakeRepository()
 
 
 @app.exception_handler(RequestValidationError)
@@ -34,15 +28,6 @@ async def validation_exception_handler(
     return JSONResponse(
         content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
     )
-
-
-@app.middleware("http")
-async def repo_middleware(request: Request, call_next: Callable[..., Any]) -> Response:
-    response = Response("Internal server error", status_code=500)
-    request.state.repo = repo
-    with suppress(Exception):
-        response = await call_next(request)
-    return response
 
 
 @app.get("/")
