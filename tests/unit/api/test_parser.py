@@ -1,6 +1,6 @@
 from result import Err, Ok
 
-from sonic.api.transactions import parse_transaction
+from sonic.api.parser import parse_transaction
 from tests.helpers import unreachable
 
 
