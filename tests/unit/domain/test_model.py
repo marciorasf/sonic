@@ -14,7 +14,7 @@ from sonic.domain.model import (
 from tests.helpers import unreachable
 
 
-def test_should_return_client_id() -> None:
+def test_to_client_id_happy_path() -> None:
     res = to_client_id("success")
     match res:
         case Ok(client_id):
@@ -32,7 +32,7 @@ def test_should_return_value_error_when_client_id_is_empty() -> None:
             unreachable()
 
 
-def test_should_return_transaction_ts() -> None:
+def test_to_transaction_ts_happy_path() -> None:
     res = to_transaction_ts("2021-03-03T03:03:03.300000")
     match res:
         case Ok(t):
@@ -57,7 +57,7 @@ def test_should_return_value_error_when_timestamp_is_invalid() -> None:
             unreachable()
 
 
-def test_should_return_value() -> None:
+def test_to_transaction_value_happy_path() -> None:
     res = to_transaction_value("20.00")
     match res:
         case Ok(v):
@@ -105,7 +105,7 @@ def test_should_return_value_error_when_value_is_out_of_bounds() -> None:
             unreachable()
 
 
-def test_should_return_description() -> None:
+def test_to_description_happy_path() -> None:
     res = to_transaction_description("my_description")
     match res:
         case Ok(d):
@@ -132,7 +132,7 @@ def test_should_return_value_error_when_description_is_too_long() -> None:
             unreachable()
 
 
-def test_should_return_new_transaction() -> None:
+def test_new_transaction_happy_path() -> None:
     res = new_transaction(
         "test_client", "2021-03-03T03:03:03.300000", "20", "description"
     )
