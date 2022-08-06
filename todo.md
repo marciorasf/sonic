@@ -1,0 +1,3 @@
+- Integrate with SQLAlchemy
+- Write integration tests
+- Write end to end tests

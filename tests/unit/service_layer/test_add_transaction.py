@@ -33,6 +33,7 @@ async def test_should_add_transaction() -> None:
     assert new_transaction.timestamp == datetime(2021, 3, 3, 3, 3, 3, 300000)
     assert new_transaction.value == Decimal(200)
     assert new_transaction.description == "My description"
+    assert uow.committed
 
 
 @pytest.mark.asyncio()
@@ -49,7 +50,7 @@ async def test_should_return_value_error_when_the_request_is_invalid() -> None:
 
     match res:
         case Err(ValueError()):
-            pass
+            assert not uow.committed
         case _:
             unreachable()
 
@@ -68,6 +69,6 @@ async def test_should_return_unknown_error_when_an_unknown_error_happens() -> No
 
     match res:
         case Err(UnknownError()):
-            pass
+            assert not uow.committed
         case _:
             unreachable()
