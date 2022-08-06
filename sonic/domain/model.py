@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 from typing import List, NewType
+from uuid import UUID
 
 from result import Err, Ok, Result
 
@@ -67,32 +68,34 @@ def to_transaction_description(
 
 @dataclass(frozen=True)
 class Transaction:
+    id: UUID
     client_id: ClientId
     timestamp: TransactionTs
     value: TransactionValue
     description: TransactionDescription
 
 
-def new_transaction(client_id: str, timestamp: str, value: str, description: str) -> Result[Transaction, List[ValueError]]:  # type: ignore[return]
+def new_transaction(id: UUID, client_id: str, timestamp: str, value: str, description: str) -> Result[Transaction, List[ValueError]]:  # type: ignore[return]
     match (
         to_client_id(client_id),
         to_transaction_ts(timestamp),
         to_transaction_value(value),
         to_transaction_description(description),
     ):
-        case (Ok(id), Ok(ts), Ok(v), Ok(d)):
+        case (Ok(c_id), Ok(ts), Ok(v), Ok(d)):
             return Ok(
                 Transaction(
-                    client_id=id,
+                    id=id,
+                    client_id=c_id,
                     timestamp=ts,
                     value=v,
                     description=d,
                 )
             )
-        case (id, ts, v, d):
+        case (c_id, ts, v, d):
             errors: List[ValueError] = []
-            if id.is_err():
-                errors.append(id.unwrap_err())
+            if c_id.is_err():
+                errors.append(c_id.unwrap_err())
 
             if ts.is_err():
                 errors.append(ts.unwrap_err())

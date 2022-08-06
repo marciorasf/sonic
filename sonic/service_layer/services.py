@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from uuid import uuid4
 
 from result import Err, Ok, Result
 
@@ -21,7 +22,9 @@ class AddTransactionResponse:
 
 
 async def add_transaction(req: AddTransactionRequest, uow: UnitOfWork) -> Result[AddTransactionResponse, ValueError | UnknownError]:  # type: ignore[return]
-    match new_transaction(req.client_id, req.timestamp, req.value, req.description):
+    match new_transaction(
+        uuid4(), req.client_id, req.timestamp, req.value, req.description
+    ):
         case Ok(transaction):
             with uow:
                 match (await uow.transactions.add(transaction)):

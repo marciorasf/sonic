@@ -11,7 +11,7 @@ from sonic.domain.model import (
     to_transaction_ts,
     to_transaction_value,
 )
-from tests.helpers import unreachable
+from tests.helpers import random_transaction_id, unreachable
 
 
 def test_to_client_id_happy_path() -> None:
@@ -133,12 +133,20 @@ def test_should_return_value_error_when_description_is_too_long() -> None:
 
 
 def test_new_transaction_happy_path() -> None:
+    id = random_transaction_id()
+
     res = new_transaction(
-        "test_client", "2021-03-03T03:03:03.300000", "20", "description"
+        id,
+        "test_client",
+        "2021-03-03T03:03:03.300000",
+        "20",
+        "description",
     )
+
     match res:
         case Ok(t):
             assert t == Transaction(
+                id=id,
                 client_id="test_client",  # type: ignore
                 timestamp=datetime(2021, 3, 3, 3, 3, 3, 300000),  # type: ignore
                 value=Decimal(20),  # type: ignore
@@ -150,7 +158,11 @@ def test_new_transaction_happy_path() -> None:
 
 def test_should_return_value_error_when_invalid_fields_are_provided() -> None:
     res = new_transaction(
-        "test_client", "2021-03-03T03:03:03.300000", "", "description"
+        random_transaction_id(),
+        "test_client",
+        "2021-03-03T03:03:03.300000",
+        "",
+        "description",
     )
     match res:
         case Err([ValueError()]):
@@ -158,7 +170,9 @@ def test_should_return_value_error_when_invalid_fields_are_provided() -> None:
         case _:
             unreachable()
 
-    res = new_transaction("test_client", "2021-03-03T03:03:03.300000", "", "")
+    res = new_transaction(
+        random_transaction_id(), "test_client", "2021-03-03T03:03:03.300000", "", ""
+    )
     match res:
         case Err([ValueError(), ValueError()]):
             pass
